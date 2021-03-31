@@ -4,6 +4,7 @@ import Divider from "@material-ui/core/Divider";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import { Typography,Card } from "@material-ui/core";
+import MetaTags from 'react-meta-tags'
 import Logo from "../../logo.png";
 
 import { withRouter } from 'react-router-dom'
@@ -19,6 +20,12 @@ class AboutUs extends React.Component {
   render() {
     return (
       <Container className='home'>
+      <MetaTags>
+          <title>Our Story | Fotorama</title>
+          <meta id="meta-description" name="description" content="About us. Our Story here @ Fotorama" />
+          <meta id="og-title" property="og:title" content="Fotorama" />
+          <meta id="og-image" property="og:image" content={Logo} />
+      </MetaTags>
       <Card  variant='outlined' style={{padding:10}}>
         <Grid container >
           <Grid item xs={12} className='homeCenter'>

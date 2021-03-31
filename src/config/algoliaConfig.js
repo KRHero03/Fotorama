@@ -1,7 +1,7 @@
 
 import algoliasearch from 'algoliasearch'
 
-const client = algoliasearch('RD2QJRUMG0','57da70e352897c8867d9c5aa9028e247')
+const client = algoliasearch(process.env.REACT_APP_ALGOLIA_APPID,process.env.REACT_APP_ALGOLIA_ADMIN_KEY)
 const index = client.initIndex('fotorama_users')
 
 export default index

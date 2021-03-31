@@ -7,6 +7,7 @@ import { Skeleton } from '@material-ui/lab'
 import Post from '../../components/Post'
 import UserView from '../../components/UserView'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import MetaTags from 'react-meta-tags'
 
 class Profile extends Component {
 
@@ -256,6 +257,11 @@ class Profile extends Component {
       )
     return (
       <Grid className='profile'>
+      <MetaTags>
+          <title>{this.state.displayName} | Fotorama</title>
+          <meta id="meta-description" name="description" content={"We have "+this.state.displayName+" @Fotorama!"} />
+          <meta id="og-title" property="og:title" content={this.state.displayName+" | Fotorama"} />
+      </MetaTags>
         <Grid item xs={12}>
           <Paper elevation={0}>
             <Grid className='profileTop'>

@@ -6,6 +6,8 @@ import registerServiceWorker from './registerServiceWorker'
 import firebase from 'firebase'
 import firebaseConfig from './config/firebaseConfig'
 
+require('dotenv')
+
 firebase.initializeApp(firebaseConfig)
 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 firebase.firestore().enablePersistence()

@@ -8,6 +8,7 @@ import firebase from 'firebase'
 import UserView from '../../components/UserView'
 import Post from '../../components/Post'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import MetaTags from 'react-meta-tags'
 import index from '../../config/algoliaConfig'
 
 class SearchView extends Component {
@@ -180,6 +181,11 @@ async componentWillReceiveProps(nextProps) {
       
       <Grid className='profile'>
 
+      <MetaTags>
+          <title>Search | Fotorama</title>
+          <meta id="meta-description" name="description" content="Search Results from Fotorama" />
+          <meta id="og-title" property="og:title" content="Search | Fotorama" />
+      </MetaTags>
         <Grid item xs={12}>
           <Paper elevation={0}>
             <Grid item xs={12}>

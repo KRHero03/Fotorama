@@ -1,11 +1,12 @@
 import { Component } from "react"
-import { Container, Button, Typography } from '@material-ui/core'
+import { Container, Button, Typography,Grid,Box } from '@material-ui/core'
 import Logo from '../../logo.png'
 import GoogleLogo from '../../assets/google_logo.png'
 import firebase from 'firebase'
 import Skeleton from '@material-ui/lab/Skeleton'
 import { withRouter } from 'react-router-dom'
 import Dashboard from '../Dashboard'
+import MetaTags from 'react-meta-tags'
 class Home extends Component {
 
   constructor(props) {
@@ -18,7 +19,6 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    console.log(process.env)
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({
@@ -63,35 +63,38 @@ class Home extends Component {
     if (this.state.isAuthenticated) return (<Dashboard />)
     if (this.state.isLoading)
       return (
-        <Container className='home'>
-          <Container className='homeCenter'>
-            <Skeleton variant="circle" className='homeLogoPlaceholder' />
-          </Container>
-          <Container className='homeCenter'>
-            <Skeleton variant="rect" className='homeTitlePlaceholder' />
-          </Container>
-          <Container className='homeCenter'>
-            <Skeleton variant="rect" className='homeButtonPlaceholder' />
-          </Container>
-        </Container>
+        <Grid className='home'>
+        </Grid>
       )
     return (
-      <Container className='home'>
-        <Container className='homeCenter'>
+      <Grid className='home'>
+        <MetaTags>
+            <title>Home | Fotorama</title>
+            <meta id="meta-description" name="description" content="Fotorama : Snap. Share. Cherish." />
+            <meta id="og-title" property="og:title" content="Fotorama" />
+            <meta id="og-image" property="og:image" content={Logo} />
+        </MetaTags>
+        <Grid item xs={12}>
+          <Box display='flex' alignItems='center' justifyContent='center' style={{marginTop:10,marginBottom: 10}}>
           <img src={Logo} alt="Logo" className='homeLogo' />
-        </Container>
-        <Container className='homeCenter'>
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Box display='flex' alignItems='center' justifyContent='center' style={{marginTop:10,marginBottom: 10}}>
           <Typography variant='h3'>
             Fotorama
           </Typography>
-        </Container>
-        <Container className='homeCenter'>
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Box display='flex' alignItems='center' justifyContent='center' style={{marginTop:10,marginBottom: 10}}>
           <Button onClick={this.signInMethod} className='signInButton' variant="contained" color="primary">
             <img src={GoogleLogo} alt="GoogleLogo" className='homeGoogleLogo' />
             SIGN IN WITH GOOGLE
           </Button>
-        </Container>
-      </Container>
+          </Box>
+        </Grid>
+      </Grid>
     )
   }
 

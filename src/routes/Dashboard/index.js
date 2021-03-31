@@ -1,12 +1,13 @@
 import { Component } from "react"
 import { withRouter } from 'react-router-dom'
-import { Grid} from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import firebase from 'firebase'
 import { Skeleton } from '@material-ui/lab'
 import CreatePost from '../../components/CreatePost'
 import Post from '../../components/Post'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import index from '../../config/algoliaConfig'
+import MetaTags from 'react-meta-tags'
 
 
 class Dashboard extends Component {
@@ -33,7 +34,7 @@ class Dashboard extends Component {
         const ref = db.collection('users').doc(user.uid)
         const result = await ref.get()
         if (!result.exists) {
-          await index.saveObjects([{objectID:user.uid,displayName:'Krunal Rank',uid:user.uid}])
+          await index.saveObjects([{ objectID: user.uid, displayName: 'Krunal Rank', uid: user.uid }])
           await ref.set({
             displayName: user.displayName,
             photoURL: user.photoURL,
@@ -80,11 +81,11 @@ class Dashboard extends Component {
       posts: [],
     })
     const db = firebase.firestore()
-    const postRef = db.collection('posts').where('timestamp', '<', this.state.lastTimeStamp).orderBy('timestamp','desc').limit(10)
+    const postRef = db.collection('posts').where('timestamp', '<', this.state.lastTimeStamp).orderBy('timestamp', 'desc').limit(10)
     const postResult = await postRef.get()
     const postRefs = await postResult.docs
 
-    if(postRefs.length===0){
+    if (postRefs.length === 0) {
       await this.setState({
         hasMore: false,
       })
@@ -105,9 +106,9 @@ class Dashboard extends Component {
     })
   }
   loadMorePosts = async () => {
-    if(this.state.isPostsLoading) return
+    if (this.state.isPostsLoading) return
     const db = firebase.firestore()
-    const postRef = db.collection('posts').where('timestamp', '<', this.state.lastTimeStamp).orderBy('timestamp','desc').limit(10)
+    const postRef = db.collection('posts').where('timestamp', '<', this.state.lastTimeStamp).orderBy('timestamp', 'desc').limit(10)
     const postResult = await postRef.get()
     const postRefs = await postResult.docs
 
@@ -152,6 +153,11 @@ class Dashboard extends Component {
   render() {
     return (
       <Grid className='dashboard'>
+        <MetaTags>
+          <title>Feed | Fotorama</title>
+          <meta id="meta-description" name="description" content="Fotorama Feed" />
+          <meta id="og-title" property="og:title" content="Fotorama" />
+        </MetaTags>
         <Grid item xs={12}>
           {
             this.state.isUserDataLoading ?
