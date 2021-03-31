@@ -34,7 +34,7 @@ class Dashboard extends Component {
         const ref = db.collection('users').doc(user.uid)
         const result = await ref.get()
         if (!result.exists) {
-          await index.saveObjects([{ objectID: user.uid, displayName: 'Krunal Rank', uid: user.uid }])
+          await index.saveObjects([{ objectID: user.uid, displayName: user.displayName, uid: user.uid }])
           await ref.set({
             displayName: user.displayName,
             photoURL: user.photoURL,

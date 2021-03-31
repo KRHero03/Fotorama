@@ -1,8 +1,8 @@
-import { Component } from "react"
+import React,{ Component } from "react"
 import { withRouter } from 'react-router-dom'
-import { IconButton, CardHeader, Card, CardActions, CardContent, Container, Grid, Paper, TextField, Box, Fab, Tooltip, Zoom, Divider, Avatar, Typography, CircularProgress, Dialog, DialogContent, DialogTitle } from '@material-ui/core'
+import { IconButton, CardHeader, Card, CardActions, CardContent, Container, Grid, Paper, TextField, Box, Fab, Tooltip, Zoom, Divider, Avatar, Typography, CircularProgress, Dialog, DialogContent, DialogTitle,Snackbar } from '@material-ui/core'
 import firebase from 'firebase'
-import { Send, Publish, MoreVert, Favorite, Cancel } from '@material-ui/icons'
+import { Send, Publish, MoreVert, Favorite, Cancel,Close } from '@material-ui/icons'
 import CameraIcon from '@material-ui/icons/Camera'
 import Camera from 'react-html5-camera-photo'
 import reduceFileSize from '../../utils/compress'
@@ -21,8 +21,28 @@ class CreatePost extends Component {
       isProfilePicModalOpen: false,
       isPhotoModalOpen: false,
       isCameraModalOpen: false,
-      videoStream: null
+      videoStream: null,
+      snackbarText: '',
+      openSnackbar: false,
     }
+  }
+
+
+  handleSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({
+      openSnackbar: !this.state.openSnackbar
+    })
+  }
+
+
+  showMessage = (msg) => {
+    this.setState({
+      snackbarText: msg,
+      openSnackbar: true
+    })
   }
 
   preventDefault = (e) => {
@@ -195,6 +215,7 @@ class CreatePost extends Component {
         imageFile: null,
         sendingPost: false
       })
+      this.showMessage('Created Post!')
     } catch (e) {
       console.log(e)
     }
@@ -335,6 +356,23 @@ class CreatePost extends Component {
             </Tooltip>
           </DialogContent>
         </Dialog>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          open={this.state.openSnackbar}
+          autoHideDuration={6000}
+          onClose={this.handleSnackbar}
+          message={this.state.snackbarText}
+          action={
+            <React.Fragment>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={this.handleSnackbar}>
+                <Close fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
       </Paper>
 
     )

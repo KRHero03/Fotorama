@@ -77,6 +77,7 @@ class SearchView extends Component {
     this.setState({
       isLoading: false,
     })
+    this.showMessage('Search Results Obtained for \''+this.state.search+'\'')
 
   }
 

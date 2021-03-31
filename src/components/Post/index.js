@@ -1,7 +1,7 @@
-import { Skeleton } from "@material-ui/lab"
-import { Component } from "react"
-import { Card, CardActions, CardHeader, Avatar, IconButton, CardContent, Dialog, Paper, CircularProgress, Tooltip, Zoom, Box, Menu, MenuItem, Link, Typography } from '@material-ui/core'
-import { MoreVert, Favorite, Delete, GetApp } from '@material-ui/icons'
+import  { Skeleton } from "@material-ui/lab"
+import React, { Component } from "react"
+import { Card, CardActions, CardHeader, Avatar, IconButton, CardContent, Dialog, Paper, CircularProgress, Tooltip, Zoom, Box, Menu, MenuItem, Link, Typography, Snackbar } from '@material-ui/core'
+import { MoreVert, Favorite, Delete, GetApp, Close } from '@material-ui/icons'
 import { withRouter } from 'react-router-dom'
 import firebase from 'firebase'
 
@@ -29,6 +29,8 @@ class Post extends Component {
       isLiking: false,
       isDownloading: false,
       menuAnchorEl: null,
+      snackbarText: '',
+      openSnackbar: false,
     }
   }
 
@@ -90,6 +92,23 @@ class Post extends Component {
   }
 
 
+  handleSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({
+      openSnackbar: !this.state.openSnackbar
+    })
+  }
+
+
+  showMessage = (msg) => {
+    this.setState({
+      snackbarText: msg,
+      openSnackbar: true
+    })
+  }
+
   toggleLike = async () => {
     this.setState({
       isLiking: true,
@@ -119,6 +138,7 @@ class Post extends Component {
       this.setState({
         isLiked: false
       })
+      this.showMessage('Liked Post!')
     } else {
       await postRef.set({
         likes: [...postData.likes, this.state.user.uid]
@@ -147,8 +167,9 @@ class Post extends Component {
       this.setState({
         isLiked: true
       })
-
-    } this.setState({
+      this.showMessage('Unliked Post!')
+    }
+    this.setState({
       isLiking: false,
     })
   }
@@ -176,6 +197,8 @@ class Post extends Component {
     this.setState({
       isDownloading: false
     })
+
+    this.showMessage('Downloaded Post!')
   }
 
   togglePhotoModal = () => {
@@ -336,6 +359,24 @@ class Post extends Component {
         >
           <MenuItem onClick={() => { this.props.deletePost(this.state.postID) }}><Delete /> &nbsp;Delete Post</MenuItem>
         </Menu>
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          open={this.state.openSnackbar}
+          autoHideDuration={6000}
+          onClose={this.handleSnackbar}
+          message={this.state.snackbarText}
+          action={
+            <React.Fragment>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={this.handleSnackbar}>
+                <Close fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
       </Paper>
     )
   }

@@ -1,7 +1,7 @@
-import { Component } from "react"
+import React,{ Component } from "react"
 import { withRouter } from 'react-router-dom'
-import { Grid, Paper, Typography, Avatar, Dialog, Box, Button, CircularProgress, Tabs, Tab, Card, Tooltip, Zoom } from '@material-ui/core'
-import { ExitToApp, PersonAdd, PersonAddDisabled } from '@material-ui/icons'
+import { Grid, Paper, Typography, Avatar, Dialog, Box, Button, CircularProgress, Tabs, Tab, Card, Tooltip, Zoom,Snackbar,IconButton } from '@material-ui/core'
+import { ExitToApp, PersonAdd, PersonAddDisabled,Close } from '@material-ui/icons'
 import firebase from 'firebase'
 import { Skeleton } from '@material-ui/lab'
 import Post from '../../components/Post'
@@ -29,6 +29,8 @@ class Profile extends Component {
       lastTimeStamp: new Date().getTime(),
       tabValue: 0,
       isPostsLoading: true,
+      snackbarText: '',
+      openSnackbar: false,
     }
   }
 
@@ -132,6 +134,24 @@ class Profile extends Component {
   }
 
 
+  handleSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({
+      openSnackbar: !this.state.openSnackbar
+    })
+  }
+
+
+  showMessage = (msg) => {
+    this.setState({
+      snackbarText: msg,
+      openSnackbar: true
+    })
+  }
+
+
 
   loadMorePosts = async () => {
     const db = firebase.firestore()
@@ -175,6 +195,8 @@ class Profile extends Component {
       })
     }))
     await postRef.delete()
+
+    this.showMessage('Successfully deteled Post!')
   }
 
   followPerson = async () => {
@@ -201,6 +223,8 @@ class Profile extends Component {
       followers: [...this.state.followers, this.state.currentUser.uid],
       isFollowButtonClicked: false
     })
+
+    this.showMessage('Followed '+this.state.displayName)
   }
 
 
@@ -224,6 +248,7 @@ class Profile extends Component {
       followers: this.state.followers.filter((e) => e !== this.state.currentUser.uid),
       isFollowButtonClicked: false
     })
+    this.showMessage('Unfollowed '+this.state.displayName)
   }
 
   signOutMethod = async () => {
@@ -402,6 +427,24 @@ class Profile extends Component {
           aria-describedby='Profile Photo' onClose={this.toggleProfilePicModal} open={this.state.isProfilePicModalOpen}>
           <img src={this.state.photoURL.replace('s96-c', 's500-c')} alt='Profile' />
         </Dialog>
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          open={this.state.openSnackbar}
+          autoHideDuration={6000}
+          onClose={this.handleSnackbar}
+          message={this.state.snackbarText}
+          action={
+            <React.Fragment>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={this.handleSnackbar}>
+                <Close fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
       </Grid>
     )
   }
